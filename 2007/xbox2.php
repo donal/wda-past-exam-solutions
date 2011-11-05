@@ -1,7 +1,7 @@
 <html>
 <body>
 <?php
-  // this is the solution to questions 2.1 and 2.2
+  // this is the solution to question 2.3
 
   // establish db connection
   try {
@@ -18,7 +18,12 @@
   if (isset($_POST['submit']) && $_POST['submit'] == 'Submit'):
     // get the options from the database
     try {
-      $query = 'SELECT * FROM game WHERE typeid = ? ORDER BY name';
+      // here's the quickest way to answer this question because it doesn't
+      // require separate queries or any manipulation of the data by PHP
+      $query = 'SELECT game.*, AVG(gamescore.score) AS average,
+COUNT(gamescore.score) AS count
+FROM gamescore, game WHERE gamescore.gameid = game.id AND game.typeid = ?
+GROUP BY game.name;';
       $statement = $pdo->prepare($query);
       $values = array($_POST['typeid']);
       $statement->execute($values);
@@ -32,7 +37,7 @@
     }
 
     foreach ($games as $game):
-      echo $game->name . "<br/>";
+      echo $game->name . " with an average score of {$game->average} ({$game->count} votes)<br/>";
     endforeach;
   else:
     // get the options from the database
@@ -50,7 +55,7 @@
       exit;
     }
 ?>
-<form action="xbox.php" method="POST">
+<form action="xbox2.php" method="POST">
 <select name="typeid">
 <?php foreach($types as $type): ?>
   <option value="<?php echo $type->id; ?>"><?php echo $type->type; ?></option>
