@@ -3,7 +3,10 @@
 <?php
   // establish db connection
   try {
-    $pdo = new PDO('mysql:host=localhost;dbname=xbox', 'xbox', 'secret');
+    // here i have added the host and port only to get it running on goanna:
+    $pdo = new PDO('mysql:host=goanna.cs.rmit.edu.au;dbname=xbox;port=50000', 'xbox', 'secret');
+    // this would be fine for the exam:
+    // $pdo = new PDO('mysql:host=localhost;dbname=xbox', 'xbox', 'secret');
   } catch (PDOException $e) {
     echo $e->getMessage();
     exit;
